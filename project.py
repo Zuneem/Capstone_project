@@ -6,6 +6,8 @@ import pandas as pd
 def main():
     x =find_files()
     combine_files(x)
+    new_file = 'order.csv'
+    total_units(new_file)
 
 # go to the Directory and take seven most recent sales reports 
 
@@ -22,6 +24,14 @@ def combine_files(needed_files):
         if file.endswith('.csv'):
             master_df = pd.concat(map(pd.read_csv, needed_files))
     master_df.to_csv('order.CSV', index=False)
+
+
+# update the created csv file with only the sizes for a column and the total quantity for each size on second column
+
+def total_units(new_file):
+    sales=pd.read_csv(new_file)
+    sales = sales.groupby(['size'])[['quantity']].sum()
+    sales.to_csv('sales.CSV')
 
 
 if __name__ == '__main__':
