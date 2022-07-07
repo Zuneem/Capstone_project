@@ -1,6 +1,7 @@
 import glob
 import os
-import pandas as pd 
+import pandas as pd
+import csv 
 
 
 def main():
@@ -33,6 +34,27 @@ def total_units(new_file):
     sales = sales.groupby(['size'])[['quantity']].sum()
     sales.to_csv('sales.CSV')
 
+# assign variable to each size's quantity
+        
+def get_var(sales):
+    new_dict = {}
+    with open(sales) as f:
+        reader = csv.DictReader(f)
+        for line in reader:
+            if line['size'] not in new_dict:
+                new_dict[line['size']] = int(line['quantity'].replace('.0', ''))
+
+    return new_dict
+
+# different sizes are sold a pack. For example, 11x14 is sold in a pack of 7; while 
+# 16x20 is sold in a pack of 5. So, we need to calculate the number of packs we need
+# to order
+
+def get_order_quantity(quantity,pack):
+    if quantity % pack == 0:
+        return quantity // pack
+    else :
+        return (quantity // pack ) +1
 
 if __name__ == '__main__':
     main()
