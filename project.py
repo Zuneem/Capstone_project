@@ -7,6 +7,7 @@ from selenium import webdriver as wd
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import random
+import re
 
 
 def main():
@@ -25,12 +26,36 @@ def find_files():
     needed_files = files[0:7]
     return needed_files
     
-# combine those seven sales reports and combine them into one csv and save it in the local directory
+
+  # validate the 'quantitiy' column - regex
+ # valdiate the 'size' column - regex 
+
+def validate_file(file):
+    df= pd.read_csv(file)
+    try:
+        for i in df['quantity'][0:-2]:
+            if not re.match(r'[1-9]{1,2}\.0', str(i)):
+                pass
+    except ValueError:
+        print('incorrect quantity format')
+            
+    try:
+        for s in df['size'][0:-2]:
+            if not re.match(r'[1-9]{1,2}x[0-9]{1,2}', s):
+                pass
+    except ValueError:
+        print('incorrect size format')
+
+
 
 def combine_files(needed_files):
     for file in needed_files:
+        validate_file(file)
+        
+    # combine those seven sales reports and combine them into one csv and save it in the local directory    
+    for file in needed_files:
         if file.endswith('.csv'):
-            master_df = pd.concat(map(pd.read_csv, needed_files))
+            master_df = pd.concat(map(pd.read_csv, needed_files))       
     master_df.to_csv('order.CSV', index=False)
 
 
