@@ -6,6 +6,7 @@ import time
 from selenium import webdriver as wd
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import ElementNotInteractableException
 import random
 import re
 
@@ -30,28 +31,29 @@ def find_files():
   # validate the 'quantitiy' column - regex
  # valdiate the 'size' column - regex 
 
-def validate_file(file):
+def validate_quantity(file):
     df= pd.read_csv(file)
     try:
         for i in df['quantity'][0:-2]:
             if not re.match(r'[1-9]{1,2}\.0', str(i)):
-                pass
+                return True           
     except ValueError:
         print('incorrect quantity format')
-            
+        
+def validate_size(file):
+    df = pd.read_csv(file)            
     try:
         for s in df['size'][0:-2]:
             if not re.match(r'[1-9]{1,2}x[0-9]{1,2}', s):
-                pass
+                return True
     except ValueError:
         print('incorrect size format')
     
 
-
-
 def combine_files(needed_files):
     for file in needed_files:
-        validate_file(file)
+        validate_quantity(file)
+        validate_size(file)
         
     # combine those seven sales reports and combine them into one csv and save it in the local directory    
     for file in needed_files:
@@ -124,7 +126,7 @@ def place_order(new_dict):
         add1 = browser.find_element(By.XPATH, '//*[@id="addToCartButton"]/span')
         add1.click()
         time.sleep(t)
-    except NoSuchElementException:
+    except (NoSuchElementException, ElementNotInteractableException):
         print('11x14 is out of stock')
         pass
 
@@ -139,7 +141,7 @@ def place_order(new_dict):
         add2 = browser.find_element(By.XPATH, '//*[@id="addToCartButton"]/span')
         add2.click()
         time.sleep(t)
-    except NoSuchElementException:
+    except (NoSuchElementException, ElementNotInteractableException):
         print('8x10 is out of stock')
         pass
 
@@ -154,7 +156,7 @@ def place_order(new_dict):
         add3 = browser.find_element(By.XPATH, '//*[@id="addToCartButton"]/span')
         add3.click()
         time.sleep(t)
-    except NoSuchElementException:
+    except (NoSuchElementException, ElementNotInteractableException):
         print('16x20 is out of stock')
         pass
 
@@ -169,7 +171,7 @@ def place_order(new_dict):
         add4 = browser.find_element(By.XPATH, '//*[@id="addToCartButton"]/span')
         add4.click()
         time.sleep(t)
-    except NoSuchElementException:
+    except (NoSuchElementException, ElementNotInteractableException):
         print('12x24 is out of stock')
         pass
 
@@ -184,7 +186,7 @@ def place_order(new_dict):
         add5 = browser.find_element(By.XPATH, '//*[@id="addToCartButton"]/span')
         add5.click()
         time.sleep(t)
-    except NoSuchElementException:
+    except (NoSuchElementException, ElementNotInteractableException):
         print('18x24 is out of stock')
         pass
 
@@ -199,7 +201,7 @@ def place_order(new_dict):
         add6 = browser.find_element(By.XPATH, '//*[@id="addToCartButton"]/span')
         add6.click()
         time.sleep(8)
-    except NoSuchElementException:
+    except (NoSuchElementException, ElementNotInteractableException):
         print('24x36 is out of stock')
         pass
 
