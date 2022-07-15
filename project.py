@@ -21,6 +21,8 @@ def main():
 
 # go to the Directory and take seven most recent sales reports
 
+''' find_files function will search for any CSV file inside daily_sales Directory
+sort it by reversed getctime and returns 7 files'''
 
 def find_files():
     files_path = "/Users/zuneemtamrakar/Desktop/daily_sales/*.csv"
@@ -47,6 +49,10 @@ def validate_size(file):
             return False
     return True
 
+''' combine_files function first validates the contents of size and quantity columns
+then it combines the returned files from fine_files function and creates a new file
+called orders.csv'''
+
 def combine_files(needed_files):
     for file in needed_files:
         if validate_quantity(file) == False or validate_size(file) == False:
@@ -61,6 +67,8 @@ def combine_files(needed_files):
 
 # update the created csv file with only the sizes for a column and the total quantity for each size on second column
 
+''' total_units function will extract only size and quantity column from order.csv file
+it then sums the quantity for each size saves them in a new file called sales.csv'''
 def total_units(new_file):
     sales = pd.read_csv(new_file)
     sales = sales.groupby(['size'])[['quantity']].sum()
@@ -68,7 +76,8 @@ def total_units(new_file):
 
 # assign variable to each size's quantity
 
-
+'''get_var function will open sales.csv file and creates a dictionary
+with size as key and quantity as value'''
 def get_var(sales):
     new_dict = {}
     with open(sales) as f:
@@ -94,7 +103,9 @@ def get_order_quantity(quantity, pack):
 # once we have the quantity that we need to order, we can how automate the
 # order process using selenium
 
-
+'''place_order function will take the dictionary that was created in get_var function
+then assign the dictionary value to a variable 
+then places order automatically in HobbyLobby website with the help of selenium'''
 def place_order(new_dict):
 
     eleven_x_fourteen = get_order_quantity(new_dict['11x14'], 7)
